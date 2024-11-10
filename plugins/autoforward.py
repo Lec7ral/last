@@ -29,7 +29,6 @@ spam_task = None
 @Client.on_callback_query(filters.regex(r'^stspam'))
 async def start_spam(client, message):
     logging.info("Al fin entro")
-    await message.reply("Has usado el comando /stspam")
     try:    
         global spam_task
         user_id = message.from_user.id
