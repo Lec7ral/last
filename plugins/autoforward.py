@@ -34,15 +34,16 @@ async def start_spam(client, message):
         user_id = message.from_user.id
         
         if spam_task and not spam_task.done():
-            await client.answer_callback_query(message.id, text = "El reenvio esta activo", show_alert=False) 
+            #await client.answer_callback_query(message.id, text = "El reenvio esta activo", show_alert=False) 
+            await client.send_message(message.id, text = "El reenvio esta activo")
             return
     
-        try:
-            delay_between_groups = int(message.text.split()[1]) #===========arreglar por planes
-            sending_interval = int(message.text.split()[2])
-        except (IndexError, ValueError):
-            delay_between_groups = DEFAULT_DELAY_BETWEEN_GROUPS
-            sending_interval = DEFAULT_SENDING_INTERVAL
+        #try:
+         #   delay_between_groups = int(message.text.split()[1]) #===========arreglar por planes
+        #    sending_interval = int(message.text.split()[2])
+        #except (IndexError, ValueError):
+        delay_between_groups = DEFAULT_DELAY_BETWEEN_GROUPS
+        sending_interval = DEFAULT_SENDING_INTERVAL
     
         stop_event.clear()
         spam_task = asyncio.create_task(background_message_sender(delay_between_groups, sending_interval, user_id, client))
