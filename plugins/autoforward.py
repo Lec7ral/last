@@ -106,18 +106,19 @@ async def send_message_to_groups(delay_between_groups, user_id, client):
                         if message_type == 'media_group':
                                 media_group = []
                                 text_messages = []
-                                
-                                for msg in message_in_memory:
-                                    if msg.text:
-                                        text_messages.append(msg.text)
-                                    elif msg.photo:
-                                        photo = msg.photo[-1] if isinstance(msg.photo, list) else msg.photo
-                                        media_group.append(InputMediaPhoto(media=photo.file_id, caption=msg.caption))
-                                    elif msg.video:
-                                        media_group.append(InputMediaVideo(media=msg.video.file_id, caption=msg.caption))                               
-                                # Enviar grupo de medios
-                                logging.info(f"grupo de medios {media_group}")
-
+                                try: 
+                                    for msg in message_in_memory:
+                                        if msg.text:
+                                            text_messages.append(msg.text)
+                                        elif msg.photo:
+                                            photo = msg.photo[-1] if isinstance(msg.photo, list) else msg.photo
+                                            media_group.append(InputMediaPhoto(media=photo.file_id, caption=msg.caption))
+                                        elif msg.video:
+                                            media_group.append(InputMediaVideo(media=msg.video.file_id, caption=msg.caption))                               
+                                    # Enviar grupo de medios
+                                    logging.info(f"grupo de medios {media_group}")
+                                except:
+                                    logging.exception("Detalles completos del error:")
 
                                 # Enviar mensajes de texto
                                 if text_messages:
@@ -132,6 +133,7 @@ async def send_message_to_groups(delay_between_groups, user_id, client):
                                         await bot.send_media_group(chat_id=group['chat_id'], media=media_group)
                                     except Exception as e:
                                         logging.error(f"al enviar el media group {e}")
+                                        logging.exception("Detalles completos del error:")
                         else:           
                             if message_in_memory.text:
                                   await bot.send_message(
