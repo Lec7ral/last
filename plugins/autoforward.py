@@ -112,7 +112,7 @@ async def send_message_to_groups(delay_between_groups, user_id, client):
                                         text_messages.append(msg.text)
                                     elif msg.photo:
                                         photo = msg.photo[-1] if isinstance(msg.photo, list) else msg.photo
-                                        media_group.append(InputMediaPhoto(media=photo, caption=msg.caption))
+                                        media_group.append(InputMediaPhoto(media=photo.file_id, caption=msg.caption))
                                     elif msg.video:
                                         media_group.append(InputMediaVideo(media=msg.video.file_id, caption=msg.caption))                               
                                 # Enviar grupo de medios
