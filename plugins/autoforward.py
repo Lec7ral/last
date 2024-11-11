@@ -82,7 +82,7 @@ def calculate_random_delay(base_delay):
 async def set_message_to_send(client, message):
     global message_to_send
     try:
-        message_to_send = await db.get_message_id(message.from_user.id)
+        message_to_send = await db.get_message_ids(message.from_user.id)
     except Exception as e:
         logging.error(f"error al recuperar mensajes: {e}")
     logging.info("Guardados los emnsajes para reenvio")
