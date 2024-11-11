@@ -144,7 +144,7 @@ async def send_message_to_groups(delay_between_groups, user_id, client):
                             elif message_in_memory.photo:
                                    
                                    photo_file_id = message_in_memory.photo[-1].file_id if isinstance(message_in_memory.photo, list) else message_in_memory.photo.file_id
-                                   loggig.warning(photo_file_id)
+                                   logging.warning(photo_file_id)
                                    try:   
                                       await bot.send_photo(
                                           chat_id=group['chat_id'],
