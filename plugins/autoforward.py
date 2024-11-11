@@ -109,6 +109,8 @@ async def send_message_to_groups(delay_between_groups, user_id, client):
                             message_id = message['id']
                             message_type = message.get('type', 'single')
                             message_in_memory = await get_message(client, message)
+                            logging.warning(f"el mensaje es: {message_type}")
+                            logging.warning(f"el mensaje een menmoria es: {message_in_memory}")
                             if message_type == 'media_group':
                                     media_group = []
                                     text_messages = []
