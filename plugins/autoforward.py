@@ -153,13 +153,13 @@ async def send_message_to_groups(delay_between_groups, user_id, client):
                                       caption=message_in_memory.caption,
                                       #reply_markup=reply_markup
                                   )
-                            logging.info(f"Message sent to group '{group.username}'")
+                            logging.info(f"Message sent to group '{group['username']}'")
                             delay = calculate_random_delay(delay_between_groups)
                             logging.info(f"Delay set to {delay} seconds.")
                             await asyncio.sleep(delay)  # Usar asyncio.sleep en lugar de time.sleep
                             
                 except Exception as e:
-                    logging.error(f"Error sending message to group '{group.username}': {e}")
+                    logging.error(f"Error sending message to group '{group['username']}': {e}")
     except Exception as e:
         logging.error(f"al reeenviar los mensajes por: {e}")
 
