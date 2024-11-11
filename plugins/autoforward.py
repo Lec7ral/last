@@ -57,15 +57,16 @@ async def start_spam(client, message):
 @Client.on_callback_query(filters.regex(r'^stopspam'))
 async def stop_spam(client, message):
     global spam_task
+    logging.info("HAsta aqui")
     try:
         if not (spam_task and not spam_task.done()):
-            await client.answer_callback_query(message.id, text = "El reenvio esta desactivado", show_alert=False)
+            await client.send_message(message.id, text = "El reenvio esta desactivado")
             await db.update_status(message.from_user.id, False)
             return
     
         stop_event.set()
         await spam_task  # Esperar a que la tarea de spam se complete
-        await client.answer_callback_query(message.id, text = "El reenvio esta desactivado", show_alert=False) 
+        await client.send_message(message.id, text = "El reenvio esta desactivado") 
         await db.update_status(message.from_user.id, False)
         logging.info("Spam stopped.")
     except Exception as e:
