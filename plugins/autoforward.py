@@ -46,6 +46,7 @@ async def start_spam(client, message):
         sending_interval = DEFAULT_SENDING_INTERVAL
     
         stop_event.clear()
+        await set_message_to_send(client, message)
         spam_task = asyncio.create_task(background_message_sender(delay_between_groups, sending_interval, user_id, client))
         #await message.edit_text(f"Spam started with a {delay_between_groups}s delay between groups and {sending_interval}s sending interval.")
         await db.update_status(user_id, True)
