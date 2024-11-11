@@ -142,13 +142,16 @@ async def send_message_to_groups(delay_between_groups, user_id, client):
                                       #reply_markup=reply_markup    =======================  para cuando extraiga los botones
                                   )
                             elif message_in_memory.photo:
-                                  photo_file_id = message_in_memory.photo[-1].file_id if isinstance(message_in_memory.photo, list) else message_in_memory.photo.file_id
-                                  await bot.send_photo(
-                                      chat_id=group['chat_id'],
-                                      photo=photo_file_id,
-                                      caption=message_in_memory.caption,
-                                      #reply_markup=reply_markup
-                                  )
+                                   try:
+                                      photo_file_id = message_in_memory.photo[-1].file_id if isinstance(message_in_memory.photo, list) else message_in_memory.photo.file_id
+                                      await bot.send_photo(
+                                          chat_id=group['chat_id'],
+                                          photo=photo_file_id,
+                                          caption=message_in_memory.caption,
+                                          #reply_markup=reply_markup
+                                      )
+                                   except:
+                                       logging.exception("Detalles completos del error:")
                             elif message_in_memory.video:
                                   await bot.send_video(
                                       chat_id=group['chat_id'],
