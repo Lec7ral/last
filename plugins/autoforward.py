@@ -91,71 +91,75 @@ async def send_message_to_groups(delay_between_groups, user_id, client):
     global message_to_send
     try:
         if message_to_send:
-            groups = await db.get_user_channels(user_id)  # Cambiar según tu implementación
-            logging.warning(groups)
+            groups = db.get_user_channels(user_id)  # Cambiar según tu implementación
             _bot = await db.get_bot(user_id)
-            try:
-                bot = await start_clone_bot(CLIENT.client(_bot))
-                logging.info("UserBot iniciado")
-            except Exception as e:
-                logging.error(e)
-            if bot:
-                for group in groups:
-                    if stop_event.is_set():  # Check if the stop event is set                           #aqui tiene que mandarlo el userbot
-                        logging.info("Stopping message broadcast.")  # Notificar al usuario
-                        break
-                    try:
-                        for message in message_to_send:
-                            message_id = message['id']
-                            message_type = message.get('type', 'single')
-                            message_in_memory = await get_message(client, message)
-                            logging.warning(f"el mensaje es: {message_type}")
-                            logging.warning(f"el mensaje een menmoria es: {message_in_memory}")
-                            if message_type == 'media_group':
-                                    media_group = []
-                                    text_messages = []
-                                    new_messages = []
-                                    
-                                    for msg in message_in_memory:
-                                        if msg.text:
-                                            text_messages.append(msg.text)
-                                        elif msg.photo:
-                                            photo = msg.photo[-1] if isinstance(msg.photo, list) else msg.photo
-                                            media_group.append(InputMediaPhoto(media=photo.file_id, caption=msg.caption))
-                                        elif msg.video:
-                                            media_group.append(InputMediaVideo(media=msg.video.file_id, caption=msg.caption))                               
-                                    # Enviar grupo de medios
-                                    if media_group:
-                                        sent_media = await bot.send_media_group(chat_id=group['chat_id'], media=media_group)
-                            else:
-                                if message_in_memory.text:
-                                      await bot.send_message(
-                                          text=message_in_memory.text,
-                                          chat_id=group['chat_id'],
-                                          #reply_markup=reply_markup    =======================  para cuando extraiga los botones
-                                      )
-                                elif message_in_memory.photo:
-                                      photo_file_id = message_in_memory.photo[-1].file_id if isinstance(message_in_memory.photo, list) else message_in_memory.photo.file_id
-                                      await bot.send_photo(
-                                          chat_id=group['chat_id'],
-                                          photo=photo_file_id,
-                                          caption=message_in_memory.caption,
-                                          #reply_markup=reply_markup
-                                      )
-                                elif message_in_memory.video:
-                                      await bot.send_video(
-                                          chat_id=group['chat_id'],
-                                          video=message_in_memory.video.file_id,
-                                          caption=message_in_memory.caption,
-                                          #reply_markup=reply_markup
-                                      )
-                                logging.info(f"Message sent to group '{group['username']}'")
-                                delay = calculate_random_delay(delay_between_groups)
-                                logging.info(f"Delay set to {delay} seconds.")
-                                await asyncio.sleep(delay)  # Usar asyncio.sleep en lugar de time.sleep
+            bot = await start_clone_bot(CLIENT.client(_bot))
+            for group in groups:
+                if stop_event.is_set():  # Check if the stop event is set                           #aqui tiene que mandarlo el userbot
+                    logging.info("Stopping message broadcast.")  # Notificar al usuario
+                    break
+                try:
+                    for message in message_to_send:
+                        message_id = message['id']
+                        message_type = message.get('type', 'single')
+                        message_in_memory = await get_message(client, message)
+                        if message_type == 'media_group':
+                                media_group = []
+                                text_messages = []
                                 
-                    except Exception as e:
-                        logging.error(f"Error sending message to group '{group['username']}': {e}")
+                                for msg in message_in_memory:
+                                    if msg.text:
+                                        text_messages.append(msg.text)
+                                    elif msg.photo:
+                                        photo = msg.photo[-1] if isinstance(msg.photo, list) else msg.photo
+                                        media_group.append(InputMediaPhoto(media=photo.file_id, caption=msg.caption))
+                                    elif msg.video:
+                                        media_group.append(InputMediaVideo(media=msg.video.file_id, caption=msg.caption))                               
+                                # Enviar grupo de medios
+                                logging.info(f"grupo de medios {media_group}")
+
+
+                                # Enviar mensajes de texto
+                                if text_messages:
+                                    await bot.send_message(
+                                        chat_id=group['chat_id'],
+                                        text=text_messages,
+                                        #reply_markup=reply_markup
+                                    )
+                                if media_group:
+                                    try:
+                                        await bot.send_media_group(chat_id=group['chat_id'], media=media_group)
+                                    except Exception as e:
+                                        logging.error(f"al enviar el media group {e}")
+                        else:           
+                            if message_in_memory.text:
+                                  await bot.send_message(
+                                      text=message_in_memory.text,
+                                      chat_id=group['chat_id'],
+                                      #reply_markup=reply_markup    =======================  para cuando extraiga los botones
+                                  )
+                            elif message_in_memory.photo:
+                                  photo_file_id = message_in_memory.photo[-1].file_id if isinstance(message_in_memory.photo, list) else message_in_memory.photo.file_id
+                                  await bot.send_photo(
+                                      chat_id=group['chat_id'],
+                                      photo=photo_file_id,
+                                      caption=message_in_memory.caption,
+                                      #reply_markup=reply_markup
+                                  )
+                            elif message_in_memory.video:
+                                  await bot.send_video(
+                                      chat_id=group['chat_id'],
+                                      video=message_in_memory.video.file_id,
+                                      caption=message_in_memory.caption,
+                                      #reply_markup=reply_markup
+                                  )
+                            logging.info(f"Message sent to group '{group.username}'")
+                            delay = calculate_random_delay(delay_between_groups)
+                            logging.info(f"Delay set to {delay} seconds.")
+                            await asyncio.sleep(delay)  # Usar asyncio.sleep en lugar de time.sleep
+                            
+                except Exception as e:
+                    logging.error(f"Error sending message to group '{group.username}': {e}")
     except Exception as e:
         logging.error(f"al reeenviar los mensajes por: {e}")
 
