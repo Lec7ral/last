@@ -91,7 +91,7 @@ async def send_message_to_groups(delay_between_groups, user_id, client):
     global message_to_send
     try:
         if message_to_send:
-            groups = db.get_user_channels(user_id)  # Cambiar según tu implementación
+            groups = await db.get_user_channels(user_id)  # Cambiar según tu implementación
             logging.warning(groups)
             _bot = await db.get_bot(user_id)
             try:
