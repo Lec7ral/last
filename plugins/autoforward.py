@@ -95,7 +95,7 @@ async def send_message_to_groups(delay_between_groups, user_id, client):
             _bot = await db.get_bot(user_id)
             bot = await start_clone_bot(CLIENT.client(_bot))
             for group in groups:
-                if stop_event.is_set():  # Check if the stop event is set                           #aqui tiene que mandarlo el userbot
+                if stop_event.is_set():  # Check if the stop event is set                           
                     logging.info("Stopping message broadcast.")  # Notificar al usuario
                     break
                 try:
@@ -112,7 +112,7 @@ async def send_message_to_groups(delay_between_groups, user_id, client):
                                         text_messages.append(msg.text)
                                     elif msg.photo:
                                         photo = msg.photo[-1] if isinstance(msg.photo, list) else msg.photo
-                                        media_group.append(InputMediaPhoto(media=photo.file_id, caption=msg.caption))
+                                        media_group.append(InputMediaPhoto(media=photo, caption=msg.caption))
                                     elif msg.video:
                                         media_group.append(InputMediaVideo(media=msg.video.file_id, caption=msg.caption))                               
                                 # Enviar grupo de medios
@@ -121,6 +121,7 @@ async def send_message_to_groups(delay_between_groups, user_id, client):
 
                                 # Enviar mensajes de texto
                                 if text_messages:
+                                    logging.warning("Entro aa")
                                     await bot.send_message(
                                         chat_id=group['chat_id'],
                                         text=text_messages,
