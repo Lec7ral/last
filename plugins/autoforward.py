@@ -15,7 +15,7 @@ CLIENT = CLIENT()
 API_ID = Config.API_ID
 API_HASH = Config.API_HASH
 DEFAULT_DELAY_BETWEEN_GROUPS = int(os.getenv("DELAY_BETWEEN_GROUPS", 5))
-DEFAULT_SENDING_INTERVAL = int(os.getenv("SENDING_INTERVAL", 600))  # Interval between sending messages in seconds
+DEFAULT_SENDING_INTERVAL = int(os.getenv("SENDING_INTERVAL", 60))  # Interval between sending messages in seconds
 DELAY_RANDOM_PERCENTAGE = int(os.getenv("DELAY_RANDOM_PERCENTAGE", 10))
 
 # Variable to hold the message to send to all groups
