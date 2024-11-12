@@ -143,17 +143,21 @@ async def send_message_to_groups(delay_between_groups, user_id, client):
                                   )
                             elif message_in_memory.photo:
                                    
-                                   photo_file_id = message_in_memory.photo[-1].file_id if isinstance(message_in_memory.photo, list) else message_in_memory.photo.file_id
-                                   logging.warning(photo_file_id, type(photo_file_id))
-                                   try:   
-                                      await bot.send_photo(
-                                          chat_id=group['chat_id'],
-                                          photo=str(photo_file_id),
-                                          caption=message_in_memory.caption,
-                                          #reply_markup=reply_markup
-                                      )
-                                   except:
-                                       logging.exception("Detalles completos del error:")
+                                  photo_file_id = message_in_memory.photo[-1].file_id if isinstance(message_in_memory.photo, list) else message_in_memory.photo.file_id
+                                  logging.warning(photo_file_id)
+                                  if photo_file_id:  # Verifica que el file_id no esté vacío
+                                          try:
+                                              await bot.send_photo(
+                                                  chat_id=group['chat_id'],
+                                                  photo=str(photo_file_id),
+                                                  caption=message_in_memory.caption,
+                                                  #reply_markup=reply_markup
+                                              )
+                                          except Exception as e:
+                                              logging.error(f"Error al enviar la foto: {e}")
+                                              logging.exception("Detalles completos del error:")
+                                      else:
+                                          logging.error("El file_id de la foto está vacío.")
                             elif message_in_memory.video:
                                   await bot.send_video(
                                       chat_id=group['chat_id'],
