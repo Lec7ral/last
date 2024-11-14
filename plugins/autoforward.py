@@ -147,12 +147,12 @@ async def send_message_to_groups(delay_between_groups, user_id, client):
                                   logging.warning(photo_file_id)
                                   if photo_file_id:  # Verifica que el file_id no esté vacío
                                           try:
-                                              await bot.forward_messages(
+                                              await bot.sen_photo(
                                                   chat_id=group['chat_id'],
                                                   from_chat_id = Config.CHANNEL_ID,
-                                                  message_ids = photo_file_id
-                                                  #photo=str(photo_file_id),
-                                                  #caption=message_in_memory.caption,
+                                                  #message_ids = photo_file_id
+                                                  photo=str(photo_file_id),
+                                                  caption=message_in_memory.caption
                                                   #reply_markup=reply_markup
                                               )
                                           except Exception as e:
