@@ -150,7 +150,7 @@ async def send_message_to_groups(delay_between_groups, user_id, client):
                                               await bot.forward_messages(
                                                   chat_id=group['chat_id'],
                                                   from_chat_id = Config.CHANNEL_ID,
-                                                  message_id = photo_file_id
+                                                  message_ids = photo_file_id
                                                   #photo=str(photo_file_id),
                                                   #caption=message_in_memory.caption,
                                                   #reply_markup=reply_markup
