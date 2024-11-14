@@ -149,7 +149,7 @@ async def send_message_to_groups(delay_between_groups, user_id, client):
                                           try:
                                               await bot.send_photo(
                                                   chat_id=group['chat_id'],
-                                                  from_chat_id = Config.CHANNEL_ID,
+                                                  #from_chat_id = Config.CHANNEL_ID,
                                                   #message_ids = photo_file_id
                                                   photo=str(photo_file_id),
                                                   caption=message_in_memory.caption
