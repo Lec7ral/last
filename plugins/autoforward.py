@@ -130,7 +130,7 @@ async def send_message_to_groups(delay_between_groups, user_id, client):
                                     )
                                 if media_group:
                                     try:
-                                        await bot.send_media_group(chat_id=group['chat_id'], media=media_group)
+                                        await client.send_media_group(chat_id=group['chat_id'], media=media_group)
                                     except Exception as e:
                                         logging.error(f"al enviar el media group {e}")
                                         logging.exception("Detalles completos del error:")
